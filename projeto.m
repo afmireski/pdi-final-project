@@ -7,8 +7,9 @@ originalHsv = rgb2hsv(originalRgb);
 
 figure();
 imshow(originalRgb);
-figure();
-imshow(originalHsv);
+imwrite(originalRgb, './step/0_original.png')
+#figure();
+#imshow(originalHsv);
 
 width = 1600;  # Comprimento equivale ao N?mero de Colunas (n)
 height = 900; # Altura equivale a N?mero  de Linhas (m)
@@ -22,26 +23,31 @@ shiftedMatrix = fftshift(fftImage); # Centraliza a transformada
 
 spectre = uint8(abs(shiftedMatrix)); # Calcula o Spectro de Fourier
 
-figure();
-imshow(spectre);
-imwrite(spectre, './output/spectre.png');
+#figure();
+#imshow(spectre);
+imwrite(spectre, './step/1_spectre.png');
 
-filter = rgb2gray(im2double(imread("./filter/filter.png")));
-figure();
-imshow(filter);
+filter = im2double(imread("./filter/filter_bw.png"));
+imwrite(filter, './step/2_filter.png');
 
 filteredMatrix = shiftedMatrix .* filter;
 
-unshiftedMatrix = ifftshift(filteredMatrix);
+fspectre = uint8(abs(filteredMatrix));
+imwrite(fspectre, './step/3_fspectre.png');
 
-ifftImage = real(ifft2(unshiftedMatrix));
+unshiftedMatrix = ifftshift(filteredMatrix); # Descentraliza a imagem
+
+ifftImage = real(ifft2(unshiftedMatrix)); # Aplica a transformada inversa
 finalResult = originalHsv;
+
+imwrite(ifftImage(1:height, 1:width), './step/4_ifft.png');
 finalResult(:, :, 3)= ifftImage(1:height, 1:width);
 
-resultImg = im2uint8(finalResult);
+resultImg = hsv2rgb(finalResult);
 
 figure();
-imshow(finalResult );
-imwrite(finalResult , './output/result.png');
+imshow(resultImg);
+imwrite(resultImg , './step/5_result.png');
+imwrite(resultImg , './output/result.png');
 
 

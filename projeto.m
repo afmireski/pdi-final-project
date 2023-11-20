@@ -2,7 +2,7 @@ pkg load image
 
 
 function r = melhoraContraste(img, m, n)
-  y = 0.4; # gama
+  y = 0.8; # gama
 
   r = img .^ y; # Aplica uma opera??o
 endfunction
@@ -49,14 +49,14 @@ unshiftedMatrix = ifftshift(filteredMatrix); # Descentraliza a imagem
 
 ifftImage = real(ifft2(unshiftedMatrix)); # Aplica a transformada inversa
 newValue = ifftImage(1:height, 1:width);
-#contrasteV = real(melhoraContraste(newValue, height, width));
+contrasteV = real(melhoraContraste(newValue, height, width));
 
 imwrite(newValue , './steps/4_newValue.png');
-#imwrite(contrasteV, './steps/4.1_newValueC.png');
+imwrite(contrasteV, './steps/4.1_newValueC.png');
 finalResult = cat(3, hue, saturation, newValue );
 
 resultImg = hsv2rgb(finalResult);
-#resultConstraste = hsv2rgb(cat(3, hue, saturation, contrasteV ));
+resultConstraste = hsv2rgb(cat(3, hue, saturation, contrasteV ));
 
 figure();
 imshow(resultImg);

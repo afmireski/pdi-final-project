@@ -1,16 +1,13 @@
 pkg load image
 
-function filter = buildMyNotchFilter(filter, p, q)
-  boxH = 300
-  boxV = 30
-  filter(1:((p/2)-boxV), ((q/2)-4):((q/2)+4)) = 0;
-  filter(((p/2)+boxV):p, ((q/2)-4):((q/2)+4)) = 0;
 
-  filter((p/2)-3:(p/2)+3, 1:(q/2)-boxH) = 0;
-  filter((p/2)-3:(p/2)+3, (q/2)+boxH:q) = 0;
+function r = melhoraContraste(img, m, n)
+  y = 0.4; # gama
+
+  r = img .^ y; # Aplica uma opera??o
 endfunction
 
-originalRgb = im2double(imread("./imgs/Imagem.jpg"));
+originalRgb = im2double(imread("./imgs/Imagem2.jpg"));
 originalHsv = rgb2hsv(originalRgb);
 
 hue = originalHsv(:, :, 1);
@@ -36,12 +33,11 @@ shiftedMatrix = fftshift(fftImage); # Centraliza a transformada
 
 spectre = uint8(abs(shiftedMatrix)); # Calcula o Spectro de Fourier
 
-#figure();
-#imshow(spectre);
+figure();
+imshow(spectre);
 imwrite(spectre, './steps/1_spectre.png');
 
-filter = im2double(imread("./filter/filter_v2.png"));
-#filter = buildMyNotchFilter(filter, p, q);
+filter = im2double(imread("./filter/filter.png"));
 imwrite(filter, './steps/2_filter.png');
 
 filteredMatrix = shiftedMatrix .* filter;
@@ -53,15 +49,19 @@ unshiftedMatrix = ifftshift(filteredMatrix); # Descentraliza a imagem
 
 ifftImage = real(ifft2(unshiftedMatrix)); # Aplica a transformada inversa
 newValue = ifftImage(1:height, 1:width);
+#contrasteV = real(melhoraContraste(newValue, height, width));
 
 imwrite(newValue , './steps/4_newValue.png');
+#imwrite(contrasteV, './steps/4.1_newValueC.png');
 finalResult = cat(3, hue, saturation, newValue );
 
 resultImg = hsv2rgb(finalResult);
+#resultConstraste = hsv2rgb(cat(3, hue, saturation, contrasteV ));
 
 figure();
 imshow(resultImg);
 imwrite(resultImg , './steps/5_result.png');
+imwrite(resultConstraste, './steps/5.1_resultC.png');
 imwrite(resultImg , './output/result.png');
 
 

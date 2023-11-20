@@ -63,5 +63,6 @@ imshow(resultImg);
 imwrite(resultImg , './steps/5_result.png');
 imwrite(resultConstraste, './steps/5.1_resultC.png');
 imwrite(resultImg , './output/result.png');
+imwrite(resultConstraste , './output/resultMelhorado.png');
 
 

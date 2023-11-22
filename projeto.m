@@ -7,7 +7,7 @@ function r = melhoraContraste(img, m, n)
   r = img .^ y; # Aplica uma opera??o
 endfunction
 
-originalRgb = im2double(imread("./imgs/Imagem2.jpg"));
+originalRgb = im2double(imread("./imgs/Imagem.jpg"));
 originalHsv = rgb2hsv(originalRgb);
 
 hue = originalHsv(:, :, 1);
@@ -60,6 +60,9 @@ resultConstraste = hsv2rgb(cat(3, hue, saturation, contrasteV ));
 
 figure();
 imshow(resultImg);
+figure();
+imshow(resultConstraste);
+
 imwrite(resultImg , './steps/5_result.png');
 imwrite(resultConstraste, './steps/5.1_resultC.png');
 imwrite(resultImg , './output/result.png');

@@ -37,24 +37,25 @@ figure();
 imshow(spectre);
 imwrite(spectre, './steps/1_spectre.png');
 
-filter = im2double(imread("./filter/filter.png"));
+filter = im2double(imread("./filter/filter.png")); # Obt?m o filtro
 imwrite(filter, './steps/2_filter.png');
 
-filteredMatrix = shiftedMatrix .* filter;
+filteredMatrix = shiftedMatrix .* filter; # Aplica o filtro
 
-fspectre = uint8(abs(filteredMatrix));
+fspectre = uint8(abs(filteredMatrix)); # Salva o espectro com o filtro aplicado
 imwrite(fspectre, './steps/3_fspectre.png');
 
 unshiftedMatrix = ifftshift(filteredMatrix); # Descentraliza a imagem
 
 ifftImage = real(ifft2(unshiftedMatrix)); # Aplica a transformada inversa
-newValue = ifftImage(1:height, 1:width);
-contrasteV = real(melhoraContraste(newValue, height, width));
+newValue = ifftImage(1:height, 1:width); # Obt?m a intensidade processada
+contrasteV = real(melhoraContraste(newValue, height, width)); # Melhora o contraste
 
 imwrite(newValue , './steps/4_newValue.png');
 imwrite(contrasteV, './steps/4.1_newValueC.png');
-finalResult = cat(3, hue, saturation, newValue );
+finalResult = cat(3, hue, saturation, newValue ); # Gera a imagem final juntando os tr?s componentes
 
+# Converte os resultados para RGB
 resultImg = hsv2rgb(finalResult);
 resultConstraste = hsv2rgb(cat(3, hue, saturation, contrasteV ));
 
